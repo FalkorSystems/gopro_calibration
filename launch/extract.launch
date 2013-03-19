@@ -4,7 +4,4 @@
     <remap from="image" to="/gscam/image_rect_color"/>
     <param name="sec_per_frame" value="0" />
   </node>
-  <node name="view" pkg="image_view" type="image_view" >
-    <remap from="image" to="/gscam/image_rect_color"/>
-  </node>
 </launch>
