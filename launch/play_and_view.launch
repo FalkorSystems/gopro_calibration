@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find gopro_calibration)/launch/play.launch" />
+  <include file="$(find gopro_calibration)/launch/view.launch" />
+</launch>

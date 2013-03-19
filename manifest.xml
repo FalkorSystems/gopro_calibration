@@ -1,0 +1,14 @@
+<package>
+  <description brief="gopro_calibration">
+
+     gopro_calibration
+
+  </description>
+  <author>Sameer Parekh</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <depend package="gscam" />
+  <depend package="camera_calibration" />
+</package>
+
+
