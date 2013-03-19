@@ -1,0 +1,8 @@
+<launch>
+  <env name="GSCAM_CONFIG" value="filesrc location=$(find gopro_calibration)/videos/calibration_dance.mp4 ! qtdemux name=demuxer demuxer. ! queue ! faad ! audioconvert ! audioresample ! autoaudiosink demuxer. ! queue ! ffdec_h264 ! ffmpegcolorspace"/>
+  <node pkg="camera_calibration" type="cameracalibrator.py" name="cameracalibrator" output="screen" >
+    <remap from="image" to="/gscam/image_raw" />
+    <remap from="camera" to="/gscam" />
+  </node>
+  <node pkg="gscam" type="gscam" name="gscam" />
+</launch>

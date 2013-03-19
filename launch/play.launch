@@ -1,0 +1,6 @@
+<launch>
+  <env name="GSCAM_CONFIG" value="filesrc location=$(find gopro_calibration)/videos/hallway_raw.mp4 ! qtdemux name=demuxer demuxer. ! queue ! faad ! audioconvert ! audioresample ! autoaudiosink demuxer. ! queue ! ffdec_h264 ! ffmpegcolorspace"/>
+  <node pkg="gscam" type="gscam" name="gscam" />
+<!--
+-->
+</launch>
