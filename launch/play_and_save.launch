@@ -1,8 +1,5 @@
 <launch>
   <include file="$(find gopro_calibration)/launch/play.launch" />
-  <group ns="gscam" >
-    <node pkg="image_proc" type="image_proc" name="image_proc" />
-  </group>
 <!--
   <node name="record" pkg="rosbag" type="record" args="/gscam/image_rect_color -O /tmp/image_rect -b 0" />
 --> 
@@ -10,5 +7,4 @@
     <remap from="image" to="/gscam/image_rect_color"/>
     <param name="sec_per_frame" value="0" />
   </node>
-
 </launch>

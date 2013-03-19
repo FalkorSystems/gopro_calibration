@@ -1,5 +1,8 @@
 <launch>
-  <env name="GSCAM_CONFIG" value="filesrc location=$(find gopro_calibration)/videos/hallway_raw.mp4 ! qtdemux name=demuxer demuxer. ! queue ! faad ! audioconvert ! audioresample ! autoaudiosink demuxer. ! queue ! ffdec_h264 ! ffmpegcolorspace"/>
+  <env name="GSCAM_CONFIG" value="filesrc location=$(find gopro_calibration)/videos/felix.mp4 ! qtdemux name=demuxer demuxer. ! queue ! faad ! audioconvert ! audioresample ! autoaudiosink demuxer. ! queue ! ffdec_h264 ! ffmpegcolorspace"/>
+  <group ns="gscam" >
+    <node pkg="image_proc" type="image_proc" name="image_proc" />
+  </group>
 <!--
   <env name="GSCAM_CONFIG" value="filesrc location=$(find gopro_calibration)/videos/hallway_raw.mp4 ! qtdemux name=demuxer demuxer. ! queue ! faad ! audioconvert ! audioresample ! autoaudiosink demuxer. ! queue ! ffdec_h264 ! videorate ! video/x-raw-yuv,framerate=15/1 ! ffmpegcolorspace"/>
 -->
