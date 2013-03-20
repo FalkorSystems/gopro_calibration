@@ -6,6 +6,7 @@ import sys
 import os
 import cv
 import numpy as np
+from progressbar import *
  
 if __name__ == '__main__':
     filename = sys.argv[1]
@@ -55,7 +56,12 @@ if __name__ == '__main__':
     map2 = cv.CreateImage((width, height), cv.IPL_DEPTH_32F, 1)
     cv.InitUndistortMap(camera_matrix, dist_coeffs, map1, map2)
  
+    widgets = ['Rectifying: ', Percentage(), ' ', Bar(marker=RotatingMarker()),
+               ' ', ETA() ]
+    pbar = ProgressBar(widgets=widgets, maxval=nFrames).start()
+
     for f in xrange( nFrames ):
+        pbar.update(f)
         frameImg = cv.QueryFrame( vidFile )
         if frameImg is None:
             print "Frame Nr", f, " fehlerhaft. Abbruch"
@@ -63,7 +69,7 @@ if __name__ == '__main__':
         undistimage = cv.CloneImage(frameImg)
         cv.Remap(frameImg, undistimage, map1, map2)
  
-        cv.ShowImage( "Video",  undistimage )
+#        cv.ShowImage( "Video",  undistimage )
         cv.SaveImage( "%s_%09d.jpg" % ( filebase, f ), undistimage )
 #       cv.WriteFrame(writer, undistimage)
  
@@ -75,17 +81,19 @@ if __name__ == '__main__':
         if k % 0x100 == 27:
             # user has press the ESC key, so exit
             break
- 
-    cv.DestroyWindow( "Video" )
+
+    pbar.finish()
+
+#    cv.DestroyWindow( "Video" )
 #   del writer
 
-print "Now executing:"
-fpsi = round(fps)
-command = "mencoder \"mf://%s_*.jpg\" -mf type=jpg:fps=%d -o %s_rect.mpg -speed 1 -ofps %d -ovc lavc -lavcopts vcodec=mpeg2video:vbitrate=2500 -oac copy -of mpeg" % ( filebase, fpsi, filebase, fpsi )
+    print "Now executing:"
+    fpsi = round(fps)
+    command = "mencoder \"mf://%s_*.jpg\" -mf type=jpg:fps=%d -o %s_rect.mpg -speed 1 -ofps %d -ovc lavc -lavcopts vcodec=mpeg2video:vbitrate=43200000 -oac copy -of mpeg" % ( filebase, fpsi, filebase, fpsi )
 
-print command
-os.system(command)
+    print command
+    os.system(command)
 
-command = "rm %s_*.jpg" % filebase
-print command
-os.system(command)
+    command = "rm %s_*.jpg" % filebase
+    print command
+    os.system(command)
