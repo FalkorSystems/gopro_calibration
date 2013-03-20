@@ -41,15 +41,15 @@ if __name__ == '__main__':
  
     # neuen Film vorbereiten
     filebase, fileext = os.path.splitext(filename)
-    outfilename = filebase + "_rect.avi"
-    print "writing to " + outfilename
+#    outfilename = filebase + "_rect.avi"
+#    print "writing to " + outfilename
 
-    writer = cv.CreateVideoWriter(
-        filename= outfilename,
-        fourcc=cv.CV_FOURCC('M', 'P', '1', 'V'),
-        fps=fps,
-        frame_size=(width,height),
-        is_color=1)
+#    writer = cv.CreateVideoWriter(
+#        filename= outfilename,
+#        fourcc=cv.CV_FOURCC('M', 'P', '1', 'V'),
+#        fps=fps,
+#        frame_size=(width,height),
+#        is_color=1)
  
     map1 = cv.CreateImage((width, height), cv.IPL_DEPTH_32F, 1)
     map2 = cv.CreateImage((width, height), cv.IPL_DEPTH_32F, 1)
@@ -65,7 +65,7 @@ if __name__ == '__main__':
  
         cv.ShowImage( "Video",  undistimage )
         cv.SaveImage( "%s_%09d.jpg" % ( filebase, f ), undistimage )
-        cv.WriteFrame(writer, undistimage)
+#       cv.WriteFrame(writer, undistimage)
  
         #Progress Bar
 #        prozent = f*100/nFrames
@@ -77,8 +77,15 @@ if __name__ == '__main__':
             break
  
     cv.DestroyWindow( "Video" )
-    del writer
+#   del writer
 
-print "Now execute:"
-fpsint = round(fps)
-print "mencoder "mf://%s_*.jpg" -mf type=jpg:fps=%d -o output.mpg -speed 1 -ofps %d -ovc lavc -lavcopts vcodec=mpeg2video:vbitrate=2500 -oac copy -of mpeg" % (filebase, fpsint, fpsint )
+print "Now executing:"
+fpsi = round(fps)
+command = "mencoder \"mf://%s_*.jpg\" -mf type=jpg:fps=%d -o %s_rect.mpg -speed 1 -ofps %d -ovc lavc -lavcopts vcodec=mpeg2video:vbitrate=2500 -oac copy -of mpeg" % ( filebase, fpsi, filebase, fpsi )
+
+print command
+os.system(command)
+
+command = "rm %s_*.jpg" % filebase
+print command
+os.system(command)
