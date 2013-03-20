@@ -3,6 +3,7 @@
 # http://www.htw-mechlab.de/index.php/undistortion-der-gopro-hd-hero2/
 
 import sys
+import os
 import cv
 import numpy as np
  
@@ -39,11 +40,13 @@ if __name__ == '__main__':
     cv.SetReal2D(dist_coeffs, 0, 4, 0.00000)
  
     # neuen Film vorbereiten
-    print "writing to " + "/tmp/" + filename
+    filebase, fileext = os.path.splitext(filename)
+    outfilename = filebase + "_rect.avi"
+    print "writing to " + outfilename
+
     writer = cv.CreateVideoWriter(
-        filename= "/tmp/" + filename,
-        #fourcc=cv.CV_FOURCC('M','J','P','G'),
-        fourcc=-1, # mit -1 ist Auswahl unter Windows
+        filename= outfilename,
+        fourcc=cv.CV_FOURCC('M', 'P', '1', 'V'),
         fps=fps,
         frame_size=(width,height),
         is_color=1)
@@ -61,6 +64,7 @@ if __name__ == '__main__':
         cv.Remap(frameImg, undistimage, map1, map2)
  
         cv.ShowImage( "Video",  undistimage )
+        cv.SaveImage( "%s_%09d.jpg" % ( filebase, f ), undistimage )
         cv.WriteFrame(writer, undistimage)
  
         #Progress Bar
