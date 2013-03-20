@@ -78,3 +78,7 @@ if __name__ == '__main__':
  
     cv.DestroyWindow( "Video" )
     del writer
+
+print "Now execute:"
+fpsint = round(fps)
+print "mencoder "mf://%s_*.jpg" -mf type=jpg:fps=%d -o output.mpg -speed 1 -ofps %d -ovc lavc -lavcopts vcodec=mpeg2video:vbitrate=2500 -oac copy -of mpeg" % (filebase, fpsint, fpsint )
