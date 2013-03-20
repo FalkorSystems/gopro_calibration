@@ -7,9 +7,9 @@ import cv
 import numpy as np
  
 if __name__ == '__main__':
- 
-    vidFile = cv.CaptureFromFile( 'fullvideo.avi' )
- 
+    filename = sys.argv[1]
+
+    vidFile = cv.CaptureFromFile( filename )
     nFrames = int(  cv.GetCaptureProperty( vidFile, cv.CV_CAP_PROP_FRAME_COUNT ) )
     fps = cv.GetCaptureProperty( vidFile, cv.CV_CAP_PROP_FPS )
     waitPerFrameInMillisec = int( 1/fps * 1000/1 )
@@ -21,26 +21,26 @@ if __name__ == '__main__':
  
     # Camera Daten fuer GoPro HD Hero2
     camera_matrix = cv.CreateMat(3, 3, cv.CV_32FC1)
-    cv.SetReal2D(camera_matrix, 0, 0, 469.96)
+    cv.SetReal2D(camera_matrix, 0, 0, 580.04414)
     cv.SetReal2D(camera_matrix, 0, 1, 0.0)
-    cv.SetReal2D(camera_matrix, 0, 2, 640)
+    cv.SetReal2D(camera_matrix, 0, 2, 678.13347)
     cv.SetReal2D(camera_matrix, 1, 0, 0.0)
-    cv.SetReal2D(camera_matrix, 1, 1, 467.68)
-    cv.SetReal2D(camera_matrix, 1, 2, 360)
+    cv.SetReal2D(camera_matrix, 1, 1, 603.16324)
+    cv.SetReal2D(camera_matrix, 1, 2, 362.61503)
     cv.SetReal2D(camera_matrix, 2, 0, 0.0)
     cv.SetReal2D(camera_matrix, 2, 1, 0.0)
     cv.SetReal2D(camera_matrix, 2, 2, 1.0)
  
     dist_coeffs = cv.CreateMat(1, 5, cv.CV_32FC1)
-    cv.SetReal2D(dist_coeffs, 0, 0, -0.18957)
-    cv.SetReal2D(dist_coeffs, 0, 1, 0.037319)
-    cv.SetReal2D(dist_coeffs, 0, 2, 0.0)
-    cv.SetReal2D(dist_coeffs, 0, 3, 0.0)
-    cv.SetReal2D(dist_coeffs, 0, 4, -0.00337)
+    cv.SetReal2D(dist_coeffs, 0, 0, -0.20605)
+    cv.SetReal2D(dist_coeffs, 0, 1, 0.03435)
+    cv.SetReal2D(dist_coeffs, 0, 2, 0.00055)
+    cv.SetReal2D(dist_coeffs, 0, 3, -0.00115)
+    cv.SetReal2D(dist_coeffs, 0, 4, 0.00000)
  
     # neuen Film vorbereiten
     writer = cv.CreateVideoWriter(
-        filename= "output.avi",
+        filename= "/tmp/" + filename,
         #fourcc=cv.CV_FOURCC('M','J','P','G'),
         fourcc=-1, # mit -1 ist Auswahl unter Windows
         fps=fps,
