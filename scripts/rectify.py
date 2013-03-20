@@ -39,6 +39,7 @@ if __name__ == '__main__':
     cv.SetReal2D(dist_coeffs, 0, 4, 0.00000)
  
     # neuen Film vorbereiten
+    print "writing to " + "/tmp/" + filename
     writer = cv.CreateVideoWriter(
         filename= "/tmp/" + filename,
         #fourcc=cv.CV_FOURCC('M','J','P','G'),
@@ -61,17 +62,15 @@ if __name__ == '__main__':
  
         cv.ShowImage( "Video",  undistimage )
         cv.WriteFrame(writer, undistimage)
-        cv.WaitKey( waitPerFrameInMillisec  )
  
         #Progress Bar
-        prozent = f*100/nFrames
-        print prozent, "%"
+#        prozent = f*100/nFrames
+#        print prozent, "%"
          
         k = cv.WaitKey(1)
         if k % 0x100 == 27:
             # user has press the ESC key, so exit
             break
  
-         
     cv.DestroyWindow( "Video" )
     del writer
