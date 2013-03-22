@@ -1,0 +1,31 @@
+#
+# First install Python
+#
+http://www.python.org/download/releases/2.7.3/
+
+#
+# Then PySide and Qt
+#
+http://qt-project.org/wiki/PySide_Binaries_MacOSX
+
+#
+# Then OpenCV
+#
+http://opencv.willowgarage.com/wiki/Mac_OS_X_OpenCV_Port
+
+#
+# Then py2app
+#
+curl -O http://peak.telecommunity.com/dist/ez_setup.py
+sudo python ez_setup.py -U setuptools
+
+sudo easy_install -U py2app
+
+#
+# Then run 
+#
+py2applet --make-setup ../scripts/defisheye.py
+rm -rf build dist
+python setup.py -p PySide,cv,cv2
+
+
