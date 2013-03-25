@@ -9,9 +9,10 @@ http://www.python.org/download/releases/2.7.3/
 http://qt-project.org/wiki/PySide_Binaries_MacOSX
 
 #
-# Then OpenCV
+# Then using Homebrew, install ffmpeg and opencv
 #
-http://opencv.willowgarage.com/wiki/Mac_OS_X_OpenCV_Port
+brew install ffmpeg
+brew install opencv
 
 #
 # Then py2app
