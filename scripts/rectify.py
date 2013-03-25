@@ -7,7 +7,7 @@ import os
 import cv
 import numpy as np
 from progressbar import *
- 
+
 if __name__ == '__main__':
     filename = sys.argv[1]
 
@@ -42,15 +42,15 @@ if __name__ == '__main__':
  
     # neuen Film vorbereiten
     filebase, fileext = os.path.splitext(filename)
-#    outfilename = filebase + "_rect.avi"
-#    print "writing to " + outfilename
+    outfilename = filebase + "_rect.avi"
+    print "writing to " + outfilename
 
-#    writer = cv.CreateVideoWriter(
-#        filename= outfilename,
-#        fourcc=cv.CV_FOURCC('M', 'P', '1', 'V'),
-#        fps=fps,
-#        frame_size=(width,height),
-#        is_color=1)
+    writer = cv.CreateVideoWriter(
+        filename= outfilename,
+        fourcc=cv.FOURCC('F', 'M', 'P', '4'),
+        fps=fps,
+        frame_size=(width,height),
+        is_color=1)
  
     map1 = cv.CreateImage((width, height), cv.IPL_DEPTH_32F, 1)
     map2 = cv.CreateImage((width, height), cv.IPL_DEPTH_32F, 1)
@@ -69,31 +69,13 @@ if __name__ == '__main__':
         undistimage = cv.CloneImage(frameImg)
         cv.Remap(frameImg, undistimage, map1, map2)
  
-#        cv.ShowImage( "Video",  undistimage )
-        cv.SaveImage( "%s_%09d.jpg" % ( filebase, f ), undistimage )
-#       cv.WriteFrame(writer, undistimage)
- 
-        #Progress Bar
-#        prozent = f*100/nFrames
-#        print prozent, "%"
-         
+        cv.WriteFrame(writer, undistimage)
+          
         k = cv.WaitKey(1)
         if k % 0x100 == 27:
             # user has press the ESC key, so exit
             break
 
     pbar.finish()
+    del writer
 
-#    cv.DestroyWindow( "Video" )
-#   del writer
-
-    print "Now executing:"
-    fpsi = round(fps)
-    command = "mencoder \"mf://%s_*.jpg\" -mf type=jpg:fps=%d -o %s_rect.mpg -speed 1 -ofps %d -ovc lavc -lavcopts vcodec=mpeg2video:vbitrate=43200000 -oac copy -of mpeg" % ( filebase, fpsi, filebase, fpsi )
-
-    print command
-    os.system(command)
-
-    command = "rm %s_*.jpg" % filebase
-    print command
-    os.system(command)
