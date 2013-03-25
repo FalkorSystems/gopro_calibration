@@ -24,8 +24,8 @@ sudo easy_install -U py2app
 #
 # Then run 
 #
-py2applet --make-setup ../scripts/defisheye.py
+py2applet --make-setup ../scripts/rectify.py
 rm -rf build dist
-python setup.py -p PySide,cv,cv2
+python setup.py py2app -p PySide -i cv,cv2 -a --use-pythonpath
 
 
