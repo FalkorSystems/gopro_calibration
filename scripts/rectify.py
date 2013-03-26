@@ -8,6 +8,8 @@ import cv
 import numpy as np
 from progressbar import *
 
+print os.getcwd()
+
 if __name__ == '__main__':
     filename = sys.argv[1]
 
