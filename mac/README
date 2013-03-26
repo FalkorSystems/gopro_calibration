@@ -25,8 +25,7 @@ sudo easy_install -U py2app
 #
 # Then run 
 #
-py2applet --make-setup ../scripts/rectify.py
+py2applet --make-setup ../DeFisheye/defisheye
 rm -rf build dist
-python setup.py py2app -p PySide -i cv,cv2 -a --iconfile ./icon.icns
-
+python setup.py py2app -p PySide,yaml -i cv,cv2 -a --iconfile ./icon.icns --argv-inject "--gui" 
 
