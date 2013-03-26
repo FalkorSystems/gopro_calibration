@@ -1,6 +1,6 @@
 .DS_Store
-mac/build
-mac/dist
-mac/setup.py
+DeFisheye/mac/build
+DeFisheye/mac/dist
+DeFisheye/mac/setup.py
 *~
 *.o
