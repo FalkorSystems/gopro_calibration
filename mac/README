@@ -27,6 +27,6 @@ sudo easy_install -U py2app
 #
 py2applet --make-setup ../scripts/rectify.py
 rm -rf build dist
-python setup.py py2app -p PySide -i cv,cv2 -a --use-pythonpath
+python setup.py py2app -p PySide -i cv,cv2 -a --iconfile ./icon.icns
 
 
