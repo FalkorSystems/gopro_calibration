@@ -93,10 +93,26 @@ class gui(QtGui.QWidget):
 
         self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok
                                             | QtGui.QDialogButtonBox.Cancel);
+        self.buttonBox.accepted.connect(self.process)
+        self.buttonBox.button(QtGui.QDialogButtonBox.Ok).setAutoDefault(True)
+        self.buttonBox.button(QtGui.QDialogButtonBox.Ok).setDefault(True)
         self.buttonBox.rejected.connect(self.close)
         self.vbox.addWidget(self.buttonBox)
 
         self.setLayout(self.vbox)
+        self.buttonBox.button(QtGui.QDialogButtonBox.Ok).setFocus()
+
+    def process(self):
+        if not os.path.exists(self.input_file.text()):
+            QtGui.QMessageBox.critical(None, self.tr("Error"), self.tr("Can not process video.\nInput file does not exists."))
+        ext = os.path.splitext(self.output_file.text())[1]
+        if (ext != ".ogv" and ext != ".mp4"):
+            QtGui.QMessageBox.critical(None, self.tr("Error"), self.tr("Can not process video.\nOutput file must be supported (*.mp4 or *.ogv) filetype."))
+        print "Processing Video"
+        print "================"
+        print "Input File:  " + self.input_file.text()
+        print "Output File: " + self.output_file.text()
+        print "Calibration: " + self.active_calibration
 
     def combo_activated(self, value):
         self.active_calibration = self.calibration[value]
@@ -129,7 +145,7 @@ class gui(QtGui.QWidget):
             self.input_file.setText(filename)
 
     def _output_dialog(self):
-        filename, filter = QtGui.QFileDialog.getSaveFileName(parent=self, caption='Output Video File', dir=os.getenv("HOME"), filter="Video (*.mp4 *.ogg)")
+        filename, filter = QtGui.QFileDialog.getSaveFileName(parent=self, caption='Output Video File', dir=os.getenv("HOME"), filter="Video (*.mp4 *.ogv)")
         #if os.path.exists(filename):
         self.output_file.setText(filename)
 
@@ -170,12 +186,20 @@ if __name__ == '__main__':
         app = QtGui.QApplication(sys.argv)
         win = gui()
         if (args.input == None):
-            filename, filter = QtGui.QFileDialog.getOpenFileName(parent=win, caption='Input Video File', dir=os.getenv("HOME"), filter="Video (*.mp4)")
-            if os.path.exists(filename):
-                win.input_file.setText(filename)
-            print filename
+            input_filename, filter = QtGui.QFileDialog.getOpenFileName(parent=win, caption='Input Video File', dir=os.getenv("HOME"), filter="Video (*.mp4)")
+            if os.path.exists(input_filename):
+                win.input_file.setText(input_filename)
+            print input_filename
         else:
-            win.input_file.setText(args.input)
+            input_filename = os.path.abspath(os.path.expanduser(args.input))
+            win.input_file.setText(input_filename)
+
+        output_filename = os.path.splitext(input_filename)[0]
+        if (platform.system() == "Linux"):
+            output_filename = output_filename + "-rect.ogv"
+        else:
+            output_filename = output_filename + "-rect.mp4"
+        win.output_file.setText(output_filename)
         win.load_configs(config_dir)
         win.combo_activated(0)
 
