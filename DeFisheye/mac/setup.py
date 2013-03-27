@@ -14,9 +14,13 @@ OPTIONS = {'argv_emulation': True,
 	   'includes': 'cv,cv2',
 	   'argv_inject': '--gui',
 	   'iconfile': 'icon.icns',
+	   'plist': { 'CFBundleIdentifier': 'com.falkorsystems.defisheye',
+		      'CFBundleName': 'DeFisheye'
+		}
 	   }
 
 setup(
+    name='DeFisheye',
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
