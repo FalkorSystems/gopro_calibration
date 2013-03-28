@@ -3,3 +3,4 @@
 *.ogv
 *.mov
 *.avi
+build/dist
