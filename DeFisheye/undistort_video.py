@@ -1,4 +1,6 @@
 #!/usr/bin/python
+
+import platform
 import sys
 import cv2
 import yaml
@@ -52,9 +54,14 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None):
     print "Width: " + str(video_width)
     print "Height: " + str(video_height)
 
+    if platform.system() == "Darwin":
+        fourcc = cv2.cv.CV_FOURCC('F', 'M', 'P', '4')
+    else:
+        fourcc = cv2.cv.CV_FOURCC('T','H','E','O')
+
     video_out = cv2.VideoWriter(
         filename=output_filename,
-        fourcc=cv2.cv.CV_FOURCC('T','H','E','O'),
+        fourcc=fourcc,
         fps=video_fps,
         frameSize=(video_width,video_height),
         isColor=1)
@@ -74,4 +81,6 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None):
         image_rect = cv2.remap(image_in, map1, map2, cv2.INTER_CUBIC)
         video_out.write(image_rect)
 
-defisheye(sys.argv[1],"defisheye.ogv","camera.yml",progress_text)
+
+if __name__ == '__main__':
+    defisheye(sys.argv[1],sys.argv[2],"config/gp_h3_720p.yml",progress_text)
