@@ -233,7 +233,7 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None,gu
         if (gui != None):
             QtGui.QApplication.processEvents()
         if (update != None):
-            pos = video_in.get(cv2.cv.CV_CAP_PROP_POS_AVI_RATIO)
+            pos = f/float(video_frames)
             if (gui != None):
                 update(gui,pos)
             else:
