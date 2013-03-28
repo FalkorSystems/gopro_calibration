@@ -13,7 +13,9 @@ if (platform.system() == "Darwin"):
                'iconfile': 'pixmaps/icon.icns',
                'plist': {
                    'CFBundleIdentifier': 'com.falkorsystems.defisheye',
-                   'CFBundleName': 'DeFisheye'
+                   'CFBundleName': 'DeFisheye',
+                   'CFBundleVersion': '0.1.0',
+                   'CFBundleShortVersionString': '0.1.0',
                }
     }
 
