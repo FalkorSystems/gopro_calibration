@@ -15,6 +15,11 @@ brew install ffmpeg
 brew install opencv
 
 #
+# Then pyyaml
+#
+sudo pip install pyyaml
+
+#
 # Then py2app
 #
 curl -O http://peak.telecommunity.com/dist/ez_setup.py
@@ -25,7 +30,6 @@ sudo easy_install -U py2app
 #
 # Then run 
 #
-py2applet --make-setup ../defisheye
 rm -rf build dist
-python setup.py py2app -p PySide,yaml -i cv,cv2 -a --iconfile ./icon.icns --argv-inject "--gui" 
+python setup.py py2app 
 
