@@ -115,6 +115,9 @@ class gui(QtGui.QWidget):
         print "Input File:  " + self.input_file.text()
         print "Output File: " + self.output_file.text()
         print "Calibration: " + self.active_calibration
+        defisheye(self.input_file.text(),self.output_file.text(),self.active_calibration,progress_text)
+        self.close()
+
 
     def combo_activated(self, value):
         self.active_calibration = self.calibration[value]
@@ -205,9 +208,13 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None):
     print "Width: " + str(video_width)
     print "Height: " + str(video_height)
 
+    if platform.system() == "Darwin":
+        fourcc = cv2.cv.CV_FOURCC('F', 'M', 'P', '4')
+    else:
+        fourcc = cv2.cv.CV_FOURCC('T','H','E','O')
     video_out = cv2.VideoWriter(
         filename=output_filename,
-        fourcc=cv2.cv.CV_FOURCC('T','H','E','O'),
+        fourcc=fourcc,
         fps=video_fps,
         frameSize=(video_width,video_height),
         isColor=1)
@@ -286,7 +293,7 @@ if __name__ == '__main__':
             else:
                 output_filename = output_filename + "-rect.mp4"
         else:
-            output_filename = os.path.abspath(os.path.expanduser(args.input))
+            output_filename = os.path.abspath(os.path.expanduser(args.output))
         if (args.calibration[0] == None):
             print "Error: Calibration file must be specified in CLI mode"
             sys.exit(os.EX_USAGE)
