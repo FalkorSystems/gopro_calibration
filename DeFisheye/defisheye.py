@@ -39,7 +39,7 @@ import yaml
 import platform
 import argparse
 import subprocess
-from PySide import QtGui
+from PySide import QtGui, QtCore
 import cv2
 import numpy
 
@@ -115,7 +115,10 @@ class gui(QtGui.QWidget):
         print "Input File:  " + self.input_file.text()
         print "Output File: " + self.output_file.text()
         print "Calibration: " + self.active_calibration
-        defisheye(self.input_file.text(),self.output_file.text(),self.active_calibration,progress_text)
+        self.prog = QtGui.QProgressDialog("Processing Video", "Cancel", 0, 100, self)
+        self.prog.show()
+        self.prog.setValue(0)
+        defisheye(self.input_file.text(),self.output_file.text(),self.active_calibration,progress_gui,self)
         self.close()
 
 
@@ -160,6 +163,9 @@ def defisheye_usage():
 usage: defisheye [--version] COMMAND [ARGS]"""
     sys.exit(os.EX_USAGE)
 
+def progress_gui(gui,status):
+    gui.prog.setValue(int(status*100))
+
 def progress_text(status):
     global last_status
     try:
@@ -191,7 +197,7 @@ def load_calibration(filename):
     except yaml.YAMLError, e:
         print "ERROR: configuration file:", e
 
-def defisheye(input_filename,output_filename,calibration_filename,update=None):
+def defisheye(input_filename,output_filename,calibration_filename,update=None,gui=None):
     cfg = load_calibration(calibration_filename)
     cameraMatrix = cfg["camera_matrix"]
     distCoeffs = cfg["distortion_coefficients"]
@@ -223,9 +229,14 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None):
     (map1, map2) = cv2.initUndistortRectifyMap(numpy.asarray(cameraMatrix), numpy.asarray(distCoeffs), None, numpy.asarray(cameraMatrix), imageSize, cv2.CV_16SC2);
 
     for f in range(video_frames):
+        if (gui != None):
+            QtGui.QApplication.processEvents()
         if (update != None):
             pos = video_in.get(cv2.cv.CV_CAP_PROP_POS_AVI_RATIO)
-            update(pos)
+            if (gui != None):
+                update(gui,pos)
+            else:
+                update(pos)
 
         image_in = video_in.read()[1]
         if image_in is None:
@@ -285,6 +296,9 @@ if __name__ == '__main__':
         sys.exit(app.exec_())
     else:
 #        defisheye(sys.argv[1],"defisheye.ogv","camera.yml",progress_text)
+        if (args.input == None):
+            print "Error: Input file must be specified in CLI mode"
+            sys.exit(os.EX_USAGE)
         input_filename = os.path.abspath(os.path.expanduser(args.input))
         if (args.output == None):
             output_filename = os.path.splitext(input_filename)[0]
