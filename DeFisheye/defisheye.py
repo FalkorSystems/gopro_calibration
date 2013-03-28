@@ -108,8 +108,8 @@ class gui(QtGui.QWidget):
         if not os.path.exists(self.input_file.text()):
             QtGui.QMessageBox.critical(None, self.tr("Error"), self.tr("Can not process video.\nInput file does not exists."))
         ext = os.path.splitext(self.output_file.text())[1]
-        if (ext != ".ogv" and ext != ".mp4"):
-            QtGui.QMessageBox.critical(None, self.tr("Error"), self.tr("Can not process video.\nOutput file must be supported (*.mp4 or *.ogv) filetype."))
+        if (ext != ".ogv" and ext != ".avi"):
+            QtGui.QMessageBox.critical(None, self.tr("Error"), self.tr("Can not process video.\nOutput file must be supported (*.avi or *.ogv) filetype."))
         print "Processing Video"
         print "================"
         print "Input File:  " + self.input_file.text()
@@ -150,7 +150,7 @@ class gui(QtGui.QWidget):
             self.input_file.setText(filename)
 
     def _output_dialog(self):
-        filename, filter = QtGui.QFileDialog.getSaveFileName(parent=self, caption='Output Video File', dir=os.getenv("HOME"), filter="Video (*.mp4 *.ogv)")
+        filename, filter = QtGui.QFileDialog.getSaveFileName(parent=self, caption='Output Video File', dir=os.getenv("HOME"), filter="Video (*.avi *.ogv)")
         #if os.path.exists(filename):
         self.output_file.setText(filename)
 
@@ -212,6 +212,7 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None):
         fourcc = cv2.cv.CV_FOURCC('F', 'M', 'P', '4')
     else:
         fourcc = cv2.cv.CV_FOURCC('T','H','E','O')
+
     video_out = cv2.VideoWriter(
         filename=output_filename,
         fourcc=fourcc,
@@ -276,7 +277,7 @@ if __name__ == '__main__':
         if (platform.system() == "Linux"):
             output_filename = output_filename + "-rect.ogv"
         else:
-            output_filename = output_filename + "-rect.mp4"
+            output_filename = output_filename + "-rect.avi"
         win.output_file.setText(output_filename)
         win.load_configs(config_dir)
         win.combo_activated(0)
@@ -291,7 +292,7 @@ if __name__ == '__main__':
             if (platform.system() == "Linux"):
                 output_filename = output_filename + "-rect.ogv"
             else:
-                output_filename = output_filename + "-rect.mp4"
+                output_filename = output_filename + "-rect.avi"
         else:
             output_filename = os.path.abspath(os.path.expanduser(args.output))
         if (args.calibration[0] == None):
