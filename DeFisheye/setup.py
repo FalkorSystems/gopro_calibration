@@ -10,7 +10,7 @@ if (platform.system() == "Darwin"):
                'packages': 'PySide,yaml',
                'includes': 'cv,cv2',
                'argv_inject': '--gui',
-               'iconfile': 'pixmaps/icon.icns',
+               'iconfile': 'pixmaps/defisheye.icns',
                'plist': {
                    'CFBundleIdentifier': 'com.falkorsystems.defisheye',
                    'CFBundleName': 'DeFisheye',
