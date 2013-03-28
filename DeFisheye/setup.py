@@ -4,8 +4,8 @@ import platform
 if (platform.system() == "Darwin"):
     from setuptools import setup
 
-    APP = ['../defisheye']
-    DATA_FILES = ['../config']
+    APP = ['defisheye']
+    DATA_FILES = ['config']
     OPTIONS = {'argv_emulation': True,
                'packages': 'PySide,yaml',
                'includes': 'cv,cv2',
