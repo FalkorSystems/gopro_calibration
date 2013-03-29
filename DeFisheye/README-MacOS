@@ -34,3 +34,13 @@ sudo easy_install -U py2app
 rm -rf build dist
 python setup.py py2app 
 
+# Sign and make package
+./signframeworks.sh dist/DeFisheye.app
+
+
+codesign -s "Mac Developer Application" dist/DeFisheye.app
+productbuild --component dist/DeFisheye.app /Applications --sign "Mac Developer Installer" dist/DeFisheye.pkg
+
+# Test
+sudo installer -store -pkg dist/DeFisheye.pkg -target /
+
