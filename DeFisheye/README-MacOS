@@ -11,6 +11,7 @@ http://qt-project.org/wiki/PySide_Binaries_MacOSX
 #
 # Then using Homebrew, install ffmpeg and opencv
 #
+brew install x264
 brew install ffmpeg
 brew install opencv
 
