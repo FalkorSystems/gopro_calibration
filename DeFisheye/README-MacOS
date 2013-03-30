@@ -60,21 +60,16 @@ sudo pip install pyyaml
 curl -O http://peak.telecommunity.com/dist/ez_setup.py
 sudo python ez_setup.py -U setuptools
 
-sudo easy_install -U py2app
+# Install and patch py2app
+hg clone https://bitbucket.org/ronaldoussoren/py2app
+cd py2app
+hg checkout branch-0.7
+patch < ../py2app.patch
+cd ..
+sudo pip install -e py2app
 
 #
 # Then run 
 #
-rm -rf build dist
-python setup.py py2app 
-
-# Sign and make package
-./signframeworks.sh dist/DeFisheye.app
-
-
-codesign -s "Mac Developer Application" dist/DeFisheye.app
-productbuild --component dist/DeFisheye.app /Applications --sign "Mac Developer Installer" dist/DeFisheye.pkg
-
-# Test
-sudo installer -store -pkg dist/DeFisheye.pkg -target /
+./makemacapp.sh
 
