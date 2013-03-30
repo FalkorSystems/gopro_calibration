@@ -15,9 +15,9 @@
 #    copyright notice, this list of conditions and the following
 #    disclaimer in the documentation and/or other materials provided
 #    with the distribution.
-#  * Neither the name of I Heart Engineering nor the names of its
-#    contributors may be used to endorse or promote products derived
-#    from this software without specific prior written permission.
+#  * Neither the name of I Heart Engineering, Falkor Systems, nor the
+#    names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,9 +33,37 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-cd $1/Contents/Frameworks
-FRAMEWORKS=*.framework
-for f in ${FRAMEWORKS}
-do
-    codesign -s "Mac Developer Application" $f/Versions/Current
-done
+# Clean
+sudo rm -rf build dist
+
+# Make app
+python setup.py py2app 
+
+cd dist
+
+# Sign
+codesign --force --verify --verbose \
+    --sign "3rd Party Mac Developer Application" \
+    --entitlements ../DeFisheye.entitlements \
+    DeFisheye.app
+
+codesign --force --verify --verbose \
+  --sign "3rd Party Mac Developer Application" \
+  --entitlements ../DeFisheye.entitlements \
+  DeFisheye.app/Contents/Frameworks/Python.framework/Versions/2.7
+
+codesign --force --verify --verbose \
+  --sign "3rd Party Mac Developer Application" \
+  --entitlements ../DeFisheye.entitlements \
+  DeFisheye.app/Contents/MacOS/python
+
+codesign -vvv -d DeFisheye.app
+
+productbuild \
+    --component DeFisheye.app \
+    /Applications \
+    --sign "3rd Party Mac Developer Installer" \
+    DeFisheye.pkg
+
+# Test
+sudo installer -store -pkg DeFisheye.pkg -target /
