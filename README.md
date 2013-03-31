@@ -1,4 +1,4 @@
-# DeFisheye: Remove the Fisheye from video footage, assuming we have an OpenCV camera calibration
+# gopro_calibration: Calibrate a camera given an MP4 file with a calibration dance
 
 ## Usage
 
