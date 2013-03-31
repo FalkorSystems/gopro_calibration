@@ -59,9 +59,9 @@ sudo python ez_setup.py -U setuptools
 
 
 hg clone https://bitbucket.org/ronaldoussoren/py2app
-cd py2app.md
+cd py2app
 hg checkout branch-0.7
-patch < ../py2app.patch
+patch < ../py2app.patch
 cd ..
 sudo pip install -e py2app
 ```
