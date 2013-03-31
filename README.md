@@ -1,4 +1,4 @@
-# gopro_calibration: A ROS package to calibrate a GoPro camera
+# DeFisheye: Remove the Fisheye from video footage, assuming we have an OpenCV camera calibration
 
 ## Usage
 
