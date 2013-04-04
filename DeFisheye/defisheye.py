@@ -42,12 +42,21 @@ import subprocess
 from PySide import QtGui, QtCore
 import cv2
 import numpy
+import time
+
+class State:
+    INPUT = 0
+    PROCESS = 1
+    SUCCESS = 2
+    END = 3
+    current = INPUT
 
 class gui(QtGui.QWidget):
     def __init__(self):
         super(gui, self).__init__()
         self.setGeometry(300, 300, 600, 150)
-        self.setWindowTitle('DeFishEye')   
+        self.setWindowTitle('DeFisheye')   
+        self.state = "ACTIVE"
 
         self.layout = QtGui.QGridLayout()
 
@@ -98,12 +107,18 @@ class gui(QtGui.QWidget):
         self.buttonBox.accepted.connect(self.process)
         self.buttonBox.button(QtGui.QDialogButtonBox.Ok).setAutoDefault(True)
         self.buttonBox.button(QtGui.QDialogButtonBox.Ok).setDefault(True)
-        self.buttonBox.rejected.connect(self.close)
+        self.buttonBox.rejected.connect(self.end)
         self.vbox.addWidget(self.buttonBox)
 
         self.setLayout(self.vbox)
         self.buttonBox.button(QtGui.QDialogButtonBox.Ok).setFocus()
 
+    def end(self):
+        if (State.current < State.SUCCESS):
+            State.current = State.END
+        self.buttonBox.close()
+        self.close()
+         
     def process(self):
         if not os.path.exists(self.input_file.text()):
             QtGui.QMessageBox.critical(None, self.tr("Error"), self.tr("Can not process video.\nInput file does not exists."))
@@ -116,6 +131,8 @@ class gui(QtGui.QWidget):
         print "Output File: " + self.output_file.text()
         print "Calibration: " + self.active_calibration
         self.prog = QtGui.QProgressDialog("Processing Video", "Cancel", 0, 100, self)
+        self.prog.setWindowTitle('DeFisheye')   
+        self.prog.canceled.connect(self.end)
         self.prog.show()
         self.prog.setValue(0)
         defisheye(self.input_file.text(),self.output_file.text(),self.active_calibration,progress_gui,self)
@@ -164,7 +181,12 @@ usage: defisheye [--version] COMMAND [ARGS]"""
     sys.exit(os.EX_USAGE)
 
 def progress_gui(gui,status):
-    gui.prog.setValue(int(status*100))
+    if (State.current >= State.SUCCESS):
+        gui.prog.close()
+        gui.close()
+    else:
+        gui.prog.setValue(int(status*100))
+        QtGui.QApplication.processEvents()
 
 def progress_text(status):
     global last_status
@@ -232,8 +254,11 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None,gu
     for f in range(video_frames):
         if (gui != None):
             QtGui.QApplication.processEvents()
+        if (State.current == State.END):
+            break
         if (update != None):
-            pos = video_in.get(cv2.cv.CV_CAP_PROP_POS_AVI_RATIO)
+            # pos = video_in.get(cv2.cv.CV_CAP_PROP_POS_AVI_RATIO)
+            pos = float(f)/video_frames
             if (gui != None):
                 update(gui,pos)
             else:
@@ -245,6 +270,16 @@ def defisheye(input_filename,output_filename,calibration_filename,update=None,gu
             break
         image_rect = cv2.remap(image_in, map1, map2, cv2.INTER_CUBIC)
         video_out.write(image_rect)
+    if (State.current < State.SUCCESS):
+        State.current = State.SUCCESS
+    if (gui != None):
+        update(gui,1)
+        if (State.current == State.SUCCESS):
+            QtGui.QMessageBox.information(None, "DeFisheye", "Processing completed.")
+        QtGui.QApplication.processEvents()
+    else:
+        print ""
+        print "Processing Completed."
 
 ################################
 if __name__ == '__main__':
@@ -259,7 +294,7 @@ if __name__ == '__main__':
         config_dir = os.path.expanduser("%s/config"%(script_dir))
 
     parser = argparse.ArgumentParser(prog='defisheye',epilog='Video Correction Tool')
-    parser.add_argument('-c','--calibration', help='Calibration File', nargs=1)
+    parser.add_argument('-c','--calibration', help='Calibration File', nargs=1, default=None)
     parser.add_argument('--gui', help='QT GUI Mode', action='store_true')
     parser.add_argument('input', help='Input Video', nargs='?')
     parser.add_argument('output', help='Output Video', nargs='?')
@@ -267,10 +302,6 @@ if __name__ == '__main__':
 
     print "DeFisheye"
     print "---------"
-    print "GUI:    %s"%repr(args.gui)
-    print "Input:  %s"%repr(args.input)
-    print "Output: %s"%repr(args.output)
-    print "Config Dir: %s"%(config_dir)
 
     if (args.gui == True or sys.stdout.isatty() == False):
         app = QtGui.QApplication(sys.argv)
@@ -296,7 +327,6 @@ if __name__ == '__main__':
         win.show()
         sys.exit(app.exec_())
     else:
-#        defisheye(sys.argv[1],"defisheye.ogv","camera.yml",progress_text)
         if (args.input == None):
             print "Error: Input file must be specified in CLI mode"
             sys.exit(os.EX_USAGE)
@@ -309,7 +339,7 @@ if __name__ == '__main__':
                 output_filename = output_filename + "-rect.avi"
         else:
             output_filename = os.path.abspath(os.path.expanduser(args.output))
-        if (args.calibration[0] == None):
+        if (args.calibration == None):
             print "Error: Calibration file must be specified in CLI mode"
             sys.exit(os.EX_USAGE)
         else:
