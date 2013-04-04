@@ -74,6 +74,8 @@ else:
         license = "BSD-3-clause",
         scripts = ["defisheye"],
         data_files=[('/usr/share/applications', ["DeFisheye.desktop"]),
+                    ('/usr/share/defisheye/config',["config/gp_h3_720p.yml"]),
+                    ('/usr/share/defisheye/config',["config/gp_h3_960p.yml"]),
                     ('/usr/share/icons/hicolor/scalable/apps',
                         ["pixmaps/defisheye.svg"]),
                     ('/usr/share/icons/hicolor/128x128/apps',

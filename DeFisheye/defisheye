@@ -292,7 +292,11 @@ if __name__ == '__main__':
     if (os_name == "Darwin"):
         config_dir = os.path.expanduser("%s/config"%(script_dir))
     if (os_name == "Linux"):
-        config_dir = os.path.expanduser("%s/config"%(script_dir))
+        config_dir = "/usr/share/defisheye/config"
+        if not os.path.exists(config_dir):
+            config_dir = os.path.expanduser("~/.defisheye")
+            if not os.path.exists(config_dir):
+                config_dir = os.path.expanduser("%s/config"%(script_dir))
 
     parser = argparse.ArgumentParser(prog='defisheye',epilog='Video Correction Tool')
     parser.add_argument('-c','--calibration', help='Calibration File', nargs=1, default=None)
@@ -317,10 +321,13 @@ if __name__ == '__main__':
             win.input_file.setText(input_filename)
 
         output_filename = os.path.splitext(input_filename)[0]
-        if (platform.system() == "Linux"):
-            output_filename = output_filename + "-rect.ogv"
+        if (input_filename != None and input_filename != ""):
+            if (platform.system() == "Linux"):
+                output_filename = output_filename + "-rect.ogv"
+            else:
+                output_filename = output_filename + "-rect.avi"
         else:
-            output_filename = output_filename + "-rect.avi"
+            output_filename = ""
         win.output_file.setText(output_filename)
         win.load_configs(config_dir)
         win.combo_activated(0)
